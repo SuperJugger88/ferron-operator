@@ -32,16 +32,16 @@ type FerronIngressSpec struct {
 
 	// foo is an example field of FerronIngress. Edit ferroningress_types.go to remove/update
 	// +optional
-	Config []FerronIngressConfig `json:"config"`
+	Config FerronIngressConfig `json:"config"`
 }
 
 type FerronIngressConfig struct {
-	Routes []FerronIngressConfigRoute `json:"hosts"`
+	Routes []FerronIngressConfigRoute `json:"routes"`
 }
 
 type FerronIngressConfigRoute struct {
 	Host      string                       `json:"host"`
-	Locations []FerronIngressRouteLocation `json:"location"`
+	Locations []FerronIngressRouteLocation `json:"locations"`
 }
 
 type FerronIngressRouteLocation struct {
@@ -54,8 +54,14 @@ type FerronIngressLocationProxy struct {
 }
 
 type FerronIngressProxyService struct {
-	Name string `json:"name"`
-	Port any    `json:"port"`
+	Name string                   `json:"name,omitempty"`
+	Port FerronIngressServicePort `json:"port,omitempty"`
+}
+
+// +kubebuilder:validation:XValidation:rule="(has(self.name) && !has(self.port)) || (!has(self.name) && has(self.port))",message="exactly one of name or port must be specified"
+type FerronIngressServicePort struct {
+	Name string `json:"name,omitempty"`
+	Port int    `json:"port"`
 }
 
 // FerronIngressStatus defines the observed state of FerronIngress.

@@ -6,4 +6,12 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: ferroningress-sample
 spec:
-  # TODO(user): Add fields here
+  config:
+    routes:
+      - host: localhost
+        locations:
+          - location: /
+            proxy:
+              service:
+                name: ferron
+                port: "80"
