@@ -46,9 +46,7 @@ spec:
                   routes:
                     items:
                       properties:
-                        host:
-                          type: string
-                        locations:
+                        handle:
                           items:
                             properties:
                               location:
@@ -63,16 +61,16 @@ spec:
                                         properties:
                                           name:
                                             type: string
-                                          port:
+                                          number:
                                             type: integer
                                         required:
-                                        - port
+                                        - number
                                         type: object
                                         x-kubernetes-validations:
                                         - message: exactly one of name or port must
                                             be specified
-                                          rule: (has(self.name) && !has(self.port))
-                                            || (!has(self.name) && has(self.port))
+                                          rule: (has(self.name) && !has(self.number))
+                                            || (!has(self.name) && has(self.number))
                                     type: object
                                 required:
                                 - service
@@ -82,9 +80,11 @@ spec:
                             - proxy
                             type: object
                           type: array
+                        host:
+                          type: string
                       required:
+                      - handle
                       - host
-                      - locations
                       type: object
                     type: array
                 required:

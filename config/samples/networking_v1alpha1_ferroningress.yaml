@@ -9,9 +9,10 @@ spec:
   config:
     routes:
       - host: localhost
-        locations:
+        handle:
           - location: /
             proxy:
               service:
                 name: ferron
-                port: "80"
+                port:
+                  number: 80

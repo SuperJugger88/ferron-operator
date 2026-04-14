@@ -40,11 +40,11 @@ type FerronIngressConfig struct {
 }
 
 type FerronIngressConfigRoute struct {
-	Host      string                       `json:"host"`
-	Locations []FerronIngressRouteLocation `json:"locations"`
+	Host   string                     `json:"host"`
+	Handle []FerronIngressRouteHandle `json:"handle"`
 }
 
-type FerronIngressRouteLocation struct {
+type FerronIngressRouteHandle struct {
 	Location string                     `json:"location"`
 	Proxy    FerronIngressLocationProxy `json:"proxy"`
 }
@@ -58,10 +58,10 @@ type FerronIngressProxyService struct {
 	Port FerronIngressServicePort `json:"port,omitempty"`
 }
 
-// +kubebuilder:validation:XValidation:rule="(has(self.name) && !has(self.port)) || (!has(self.name) && has(self.port))",message="exactly one of name or port must be specified"
+// +kubebuilder:validation:XValidation:rule="(has(self.name) && !has(self.number)) || (!has(self.name) && has(self.number))",message="exactly one of name or port must be specified"
 type FerronIngressServicePort struct {
-	Name string `json:"name,omitempty"`
-	Port int    `json:"port"`
+	Name   string `json:"name,omitempty"`
+	Number int    `json:"number"`
 }
 
 // FerronIngressStatus defines the observed state of FerronIngress.
