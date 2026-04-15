@@ -214,6 +214,7 @@ func (r *FerronProxyReconciler) ensureDefaultProxySelector(ctx context.Context) 
 			Replicas:       new(int32),
 			ServiceType:    "LoadBalancer",
 		},
+		Status: networkingv1alpha1.FerronProxySelectorStatus{},
 	}
 	*selector.Spec.Replicas = 1
 	err = r.Client.Create(ctx, selector)
@@ -224,18 +225,18 @@ func (r *FerronProxyReconciler) ensureDefaultProxySelector(ctx context.Context) 
 	return nil
 }
 
-func (r *FerronProxyReconciler) getProxySelectorName(ctx context.Context) (string, error) {
-	selectorList := &networkingv1alpha1.FerronProxySelectorList{}
-	if err := r.List(ctx, selectorList, &client.ListOptions{Namespace: ""}); err != nil {
-		return "", err
-	}
+// func (r *FerronProxyReconciler) getProxySelectorName(ctx context.Context) (string, error) {
+// 	selectorList := &networkingv1alpha1.FerronProxySelectorList{}
+// 	if err := r.List(ctx, selectorList, &client.ListOptions{Namespace: ""}); err != nil {
+// 		return "", err
+// 	}
 
-	for _, selector := range selectorList.Items {
-		return selector.Name, nil
-	}
+// 	for _, selector := range selectorList.Items {
+// 		return selector.Name, nil
+// 	}
 
-	return "ferron", nil
-}
+// 	return "ferron", nil
+// }
 
 func (r *FerronProxyReconciler) getDefaultProxySelector(ctx context.Context) (*networkingv1alpha1.FerronProxySelector, error) {
 	selector := &networkingv1alpha1.FerronProxySelector{}
@@ -320,10 +321,10 @@ func (r *FerronProxyReconciler) ensureConfigMap(ctx context.Context, content str
 
 func (r *FerronProxyReconciler) generateKDLConfig(proxies []networkingv1alpha1.FerronProxy, certs map[string]*networkingv1alpha1.FerronCertificate) string {
 	var lines []string
-	lines = append(lines, fmt.Sprintf("server {"))
-	lines = append(lines, fmt.Sprintf("    port 80"))
-	lines = append(lines, fmt.Sprintf("    port 443"))
-	lines = append(lines, fmt.Sprintf("}"))
+	lines = append(lines, "server {")
+	lines = append(lines, "    port 80")
+	lines = append(lines, "    port 443")
+	lines = append(lines, "}")
 
 	for _, proxy := range proxies {
 		for _, route := range proxy.Spec.Config.Routes {
@@ -357,8 +358,8 @@ func (r *FerronProxyReconciler) generateKDLConfig(proxies []networkingv1alpha1.F
 				backendURL := fmt.Sprintf("%s://%s.%s.svc.cluster.local:%d%s",
 					scheme, serviceName, proxy.Namespace, port, endpoint)
 				lines = append(lines, fmt.Sprintf("        proxy %q", backendURL))
-				lines = append(lines, fmt.Sprintf("    }"))
-				lines = append(lines, fmt.Sprintf("}"))
+				lines = append(lines, "    }")
+				lines = append(lines, "}")
 			}
 		}
 
@@ -380,22 +381,22 @@ func (r *FerronProxyReconciler) generateKDLConfig(proxies []networkingv1alpha1.F
 				}
 
 				lines = append(lines, fmt.Sprintf("%q:443 {", host))
-				lines = append(lines, fmt.Sprintf("    tls {"))
+				lines = append(lines, "    tls {")
 				lines = append(lines, fmt.Sprintf("        secret %q", secretName))
 
 				if cert.Spec.ACMEServer != "" {
-					lines = append(lines, fmt.Sprintf("        acme {"))
+					lines = append(lines, "        acme {")
 					lines = append(lines, fmt.Sprintf("            email %q", cert.Spec.Email))
 					lines = append(lines, fmt.Sprintf("            server %q", cert.Spec.ACMEServer))
-					lines = append(lines, fmt.Sprintf("        }"))
+					lines = append(lines, "        }")
 				} else {
-					lines = append(lines, fmt.Sprintf("        acme {"))
+					lines = append(lines, "        acme {")
 					lines = append(lines, fmt.Sprintf("            email %q", cert.Spec.Email))
-					lines = append(lines, fmt.Sprintf("        }"))
+					lines = append(lines, "        }")
 				}
 
-				lines = append(lines, fmt.Sprintf("    }"))
-				lines = append(lines, fmt.Sprintf("}"))
+				lines = append(lines, "    }")
+				lines = append(lines, "}")
 			}
 		}
 	}
@@ -415,7 +416,7 @@ func (r *FerronProxyReconciler) triggerReload(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)

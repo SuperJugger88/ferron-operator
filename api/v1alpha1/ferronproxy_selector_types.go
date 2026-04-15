@@ -41,8 +41,9 @@ type FerronProxySelector struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitzero"`
 
-	Spec   FerronProxySelectorSpec   `json:"spec"`
-	Status FerronProxySelectorStatus `json:"status,omitzero"`
+	Spec FerronProxySelectorSpec `json:"spec"`
+	// +optional
+	Status FerronProxySelectorStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
