@@ -4,7 +4,7 @@ Kubernetes operator for managing Ferron reverse proxy deployments.
 
 ## Description
 
-Ferron-operator is a Kubernetes operator that manages [Ferron](https://github.com/ferron) reverse proxy instances in a Kubernetes cluster. It provides a declarative way to configure routing, load balancing, and TLS termination for services.
+Ferron-operator is a Kubernetes operator that manages [Ferron](https://ferron.sh) reverse proxy instances in a Kubernetes cluster. It provides a declarative way to configure routing, load balancing, and TLS termination for services.
 
 The operator manages three custom resources:
 
