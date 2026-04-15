@@ -11,12 +11,12 @@ metadata:
   labels:
     app.kubernetes.io/name: ferron-operator
     app.kubernetes.io/managed-by: kustomize
-  name: ferroningress-viewer-role
+  name: ferronproxy-viewer-role
 rules:
 - apiGroups:
   - networking.ferron.sh
   resources:
-  - ferroningresses
+  - ferronproxies
   verbs:
   - get
   - list
@@ -24,6 +24,6 @@ rules:
 - apiGroups:
   - networking.ferron.sh
   resources:
-  - ferroningresses/status
+  - ferronproxies/status
   verbs:
   - get

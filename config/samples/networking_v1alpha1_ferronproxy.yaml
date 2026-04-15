@@ -1,11 +1,12 @@
 apiVersion: networking.ferron.sh/v1alpha1
-kind: FerronIngress
+kind: FerronProxy
 metadata:
   labels:
     app.kubernetes.io/name: ferron-operator
     app.kubernetes.io/managed-by: kustomize
-  name: ferroningress-sample
+  name: ferronproxy-sample
 spec:
+  proxySelector: ferron
   config:
     routes:
       - host: localhost
@@ -16,3 +17,5 @@ spec:
                 name: ferron
                 port:
                   number: 80
+                scheme: http
+                endpoint: /

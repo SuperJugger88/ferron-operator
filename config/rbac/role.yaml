@@ -5,9 +5,38 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - deployments
+  - secrets
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - create
+  - get
+- apiGroups:
   - networking.ferron.sh
   resources:
-  - ferroningresses
+  - ferroncertificates
+  - ferronproxies
+  - ferronproxyselectors
   verbs:
   - create
   - delete
@@ -19,14 +48,16 @@ rules:
 - apiGroups:
   - networking.ferron.sh
   resources:
-  - ferroningresses/finalizers
+  - ferroncertificates/status
+  - ferronproxies/status
+  - ferronproxyselectors/status
   verbs:
+  - get
+  - patch
   - update
 - apiGroups:
   - networking.ferron.sh
   resources:
-  - ferroningresses/status
+  - ferronproxies/finalizers
   verbs:
-  - get
-  - patch
   - update

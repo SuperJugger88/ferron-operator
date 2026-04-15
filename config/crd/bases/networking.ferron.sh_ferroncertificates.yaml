@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.1
-  name: ferroningresses.networking.ferron.sh
+  name: ferroncertificates.networking.ferron.sh
 spec:
   group: networking.ferron.sh
   names:
-    kind: FerronIngress
-    listKind: FerronIngressList
-    plural: ferroningresses
-    singular: ferroningress
+    kind: FerronCertificate
+    listKind: FerronCertificateList
+    plural: ferroncertificates
+    singular: ferroncertificate
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: FerronIngress is the Schema for the ferroningresses API
+        description: FerronCertificate is the Schema for the ferroncertificates API
         properties:
           apiVersion:
             description: |-
@@ -37,74 +37,22 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec defines the desired state of FerronIngress
             properties:
-              config:
-                description: foo is an example field of FerronIngress. Edit ferroningress_types.go
-                  to remove/update
-                properties:
-                  routes:
-                    items:
-                      properties:
-                        handle:
-                          items:
-                            properties:
-                              location:
-                                type: string
-                              proxy:
-                                properties:
-                                  service:
-                                    properties:
-                                      name:
-                                        type: string
-                                      port:
-                                        properties:
-                                          name:
-                                            type: string
-                                          number:
-                                            type: integer
-                                        required:
-                                        - number
-                                        type: object
-                                        x-kubernetes-validations:
-                                        - message: exactly one of name or port must
-                                            be specified
-                                          rule: (has(self.name) && !has(self.number))
-                                            || (!has(self.name) && has(self.number))
-                                    type: object
-                                required:
-                                - service
-                                type: object
-                            required:
-                            - location
-                            - proxy
-                            type: object
-                          type: array
-                        host:
-                          type: string
-                      required:
-                      - handle
-                      - host
-                      type: object
-                    type: array
-                required:
-                - routes
-                type: object
+              acmeServer:
+                type: string
+              domain:
+                type: string
+              email:
+                type: string
+              secretName:
+                type: string
+            required:
+            - domain
+            - email
             type: object
           status:
-            description: status defines the observed state of FerronIngress
             properties:
               conditions:
-                description: |-
-                  conditions represent the current state of the FerronIngress resource.
-                  Each condition has a unique type and reflects the status of a specific aspect of the resource.
-
-                  Standard condition types include:
-                  - "Available": the resource is fully functional
-                  - "Progressing": the resource is being created or updated
-                  - "Degraded": the resource failed to reach or maintain its desired state
-
-                  The status of each condition is one of True, False, or Unknown.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -160,12 +108,11 @@ spec:
                   - type
                   type: object
                 type: array
-                x-kubernetes-list-map-keys:
-                - type
-                x-kubernetes-list-type: map
             type: object
         required:
+        - metadata
         - spec
+        - status
         type: object
     served: true
     storage: true

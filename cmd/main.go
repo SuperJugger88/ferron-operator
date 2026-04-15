@@ -178,11 +178,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := (&controller.FerronIngressReconciler{
+	if err := (&controller.FerronProxyReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "Failed to create controller", "controller", "FerronIngress")
+		setupLog.Error(err, "Failed to create controller", "controller", "FerronProxy")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

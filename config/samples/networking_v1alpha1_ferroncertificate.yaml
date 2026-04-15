@@ -1,0 +1,12 @@
+apiVersion: networking.ferron.sh/v1alpha1
+kind: FerronCertificate
+metadata:
+  labels:
+    app.kubernetes.io/name: ferron-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: ferroncertificate-sample
+spec:
+  domain: example.com
+  email: admin@example.com
+  # acmeServer: https://acme-v02.api.letsencrypt.org/directory
+  # secretName: my-tls-secret

@@ -1,4 +1,6 @@
 ## Append samples of your project ##
 resources:
-- networking_v1alpha1_ferroningress.yaml
+- networking_v1alpha1_ferronproxy.yaml
+- networking_v1alpha1_ferroncertificate.yaml
+- networking_v1alpha1_ferronproxyselector.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

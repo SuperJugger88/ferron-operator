@@ -1,0 +1,9 @@
+apiVersion: networking.ferron.sh/v1alpha1
+kind: FerronProxySelector
+metadata:
+  name: ferron
+spec:
+  controllerName: ferron.ferron.sh/controller
+  image: ferronserver/ferron:latest
+  replicas: 1
+  serviceType: LoadBalancer

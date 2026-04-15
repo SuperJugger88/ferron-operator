@@ -30,7 +30,7 @@ import (
 	networkingv1alpha1 "SuperJugger88/ferron-operator/api/v1alpha1"
 )
 
-var _ = Describe("FerronIngress Controller", func() {
+var _ = Describe("FerronProxy Controller", func() {
 	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
 
@@ -40,18 +40,39 @@ var _ = Describe("FerronIngress Controller", func() {
 			Name:      resourceName,
 			Namespace: "default", // TODO(user):Modify as needed
 		}
-		ferroningress := &networkingv1alpha1.FerronIngress{}
+		ferronproxy := &networkingv1alpha1.FerronProxy{}
 
 		BeforeEach(func() {
-			By("creating the custom resource for the Kind FerronIngress")
-			err := k8sClient.Get(ctx, typeNamespacedName, ferroningress)
+			By("creating the custom resource for the Kind FerronProxy")
+			err := k8sClient.Get(ctx, typeNamespacedName, ferronproxy)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &networkingv1alpha1.FerronIngress{
+				resource := &networkingv1alpha1.FerronProxy{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					// TODO(user): Specify other spec details if needed.
+					Spec: networkingv1alpha1.FerronProxySpec{
+						Config: networkingv1alpha1.FerronProxyConfig{
+							Routes: []networkingv1alpha1.FerronProxyConfigRoute{
+								{
+									Host: "localhost",
+									Handle: []networkingv1alpha1.FerronProxyRouteHandle{
+										{
+											Location: "/",
+											Proxy: networkingv1alpha1.FerronProxyHandleProxy{
+												Service: networkingv1alpha1.FerronProxyProxyService{
+													Name: "test-service",
+													Port: networkingv1alpha1.FerronProxyServicePort{
+														Number: 80,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
 				}
 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
 			}
@@ -59,16 +80,16 @@ var _ = Describe("FerronIngress Controller", func() {
 
 		AfterEach(func() {
 			// TODO(user): Cleanup logic after each test, like removing the resource instance.
-			resource := &networkingv1alpha1.FerronIngress{}
+			resource := &networkingv1alpha1.FerronProxy{}
 			err := k8sClient.Get(ctx, typeNamespacedName, resource)
 			Expect(err).NotTo(HaveOccurred())
 
-			By("Cleanup the specific resource instance FerronIngress")
+			By("Cleanup the specific resource instance FerronProxy")
 			Expect(k8sClient.Delete(ctx, resource)).To(Succeed())
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &FerronIngressReconciler{
+			controllerReconciler := &FerronProxyReconciler{
 				Client: k8sClient,
 				Scheme: k8sClient.Scheme(),
 			}

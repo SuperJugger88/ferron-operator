@@ -23,56 +23,58 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// FerronIngressSpec defines the desired state of FerronIngress
-type FerronIngressSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-
-	// foo is an example field of FerronIngress. Edit ferroningress_types.go to remove/update
-	// +optional
-	Config FerronIngressConfig `json:"config"`
+// FerronProxySpec defines the desired state of FerronProxy
+type FerronProxySpec struct {
+	ProxySelector string            `json:"proxySelector,omitempty"`
+	Config        FerronProxyConfig `json:"config"`
+	TLS           *FerronProxyTLS   `json:"tls,omitempty"`
 }
 
-type FerronIngressConfig struct {
-	Routes []FerronIngressConfigRoute `json:"routes"`
+type FerronProxyTLS struct {
+	SecretName  string `json:"secretName,omitempty"`
+	Certificate string `json:"certificate,omitempty"`
 }
 
-type FerronIngressConfigRoute struct {
-	Host   string                     `json:"host"`
-	Handle []FerronIngressRouteHandle `json:"handle"`
+type FerronProxyConfig struct {
+	Routes []FerronProxyConfigRoute `json:"routes"`
 }
 
-type FerronIngressRouteHandle struct {
-	Location string                     `json:"location"`
-	Proxy    FerronIngressLocationProxy `json:"proxy"`
+type FerronProxyConfigRoute struct {
+	Host   string                   `json:"host"`
+	Handle []FerronProxyRouteHandle `json:"handle"`
 }
 
-type FerronIngressLocationProxy struct {
-	Service FerronIngressProxyService `json:"service"`
+type FerronProxyRouteHandle struct {
+	Location string                 `json:"location"`
+	Proxy    FerronProxyHandleProxy `json:"proxy"`
 }
 
-type FerronIngressProxyService struct {
-	Name string                   `json:"name,omitempty"`
-	Port FerronIngressServicePort `json:"port,omitempty"`
+type FerronProxyHandleProxy struct {
+	Service FerronProxyProxyService `json:"service"`
+}
+
+type FerronProxyProxyService struct {
+	Name     string                 `json:"name,omitempty"`
+	Port     FerronProxyServicePort `json:"port,omitempty"`
+	Scheme   string                 `json:"scheme,omitempty"`
+	Endpoint string                 `json:"endpoint,omitempty"`
 }
 
 // +kubebuilder:validation:XValidation:rule="(has(self.name) && !has(self.number)) || (!has(self.name) && has(self.number))",message="exactly one of name or port must be specified"
-type FerronIngressServicePort struct {
+type FerronProxyServicePort struct {
 	Name   string `json:"name,omitempty"`
 	Number int    `json:"number"`
 }
 
-// FerronIngressStatus defines the observed state of FerronIngress.
-type FerronIngressStatus struct {
+// FerronProxyStatus defines the observed state of FerronProxy.
+type FerronProxyStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// For Kubernetes API conventions, see:
 	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
 
-	// conditions represent the current state of the FerronIngress resource.
+	// conditions represent the current state of the FerronProxy resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
 	//
 	// Standard condition types include:
@@ -90,32 +92,32 @@ type FerronIngressStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// FerronIngress is the Schema for the ferroningresses API
-type FerronIngress struct {
+// FerronProxy is the Schema for the FerronProxyes API
+type FerronProxy struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is a standard object metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitzero"`
 
-	// spec defines the desired state of FerronIngress
+	// spec defines the desired state of FerronProxy
 	// +required
-	Spec FerronIngressSpec `json:"spec"`
+	Spec FerronProxySpec `json:"spec"`
 
-	// status defines the observed state of FerronIngress
+	// status defines the observed state of FerronProxy
 	// +optional
-	Status FerronIngressStatus `json:"status,omitzero"`
+	Status FerronProxyStatus `json:"status,omitzero"`
 }
 
 // +kubebuilder:object:root=true
 
-// FerronIngressList contains a list of FerronIngress
-type FerronIngressList struct {
+// FerronProxyList contains a list of FerronProxy
+type FerronProxyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitzero"`
-	Items           []FerronIngress `json:"items"`
+	Items           []FerronProxy `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&FerronIngress{}, &FerronIngressList{})
+	SchemeBuilder.Register(&FerronProxy{}, &FerronProxyList{})
 }

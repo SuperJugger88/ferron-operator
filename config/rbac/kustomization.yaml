@@ -22,7 +22,7 @@ resources:
 # default, aiding admins in cluster management. Those roles are
 # not used by the ferron-operator itself. You can comment the following lines
 # if you do not want those helpers be installed with your Project.
-- ferroningress_admin_role.yaml
-- ferroningress_editor_role.yaml
-- ferroningress_viewer_role.yaml
+- ferronproxy_admin_role.yaml
+- ferronproxy_editor_role.yaml
+- ferronproxy_viewer_role.yaml
 
