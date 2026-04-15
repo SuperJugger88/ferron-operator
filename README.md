@@ -1,18 +1,36 @@
 # ferron-operator
-// TODO(user): Add simple overview of use/purpose
+
+Kubernetes operator for managing Ferron reverse proxy deployments.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+
+Ferron-operator is a Kubernetes operator that manages [Ferron](https://github.com/ferron) reverse proxy instances in a Kubernetes cluster. It provides a declarative way to configure routing, load balancing, and TLS termination for services.
+
+The operator manages three custom resources:
+
+- **FerronProxy** - Defines routing rules and upstream services
+- **FerronProxySelector** - Selects and configures FerronProxy resources (similar to IngressClass)
+- **FerronCertificate** - Manages TLS certificates with ACME support
+
+### Features
+
+- Declarative routing configuration via custom resources
+- Automatic proxy deployment and configuration
+- TLS termination with automatic certificate management (ACME)
+- Hot reload configuration without pod restarts
+- Support for multiple routing rules per host
 
 ## Getting Started
 
 ### Prerequisites
+
 - go version v1.24.6+
 - docker version 17.03+.
 - kubectl version v1.11.3+.
 - Access to a Kubernetes v1.11.3+ cluster.
 
 ### To Deploy on the cluster
+
 **Build and push your image to the location specified by `IMG`:**
 
 ```sh
@@ -21,7 +39,7 @@ make docker-build docker-push IMG=<some-registry>/ferron-operator:tag
 
 **NOTE:** This image ought to be published in the personal registry you specified.
 And it is required to have access to pull the image from the working environment.
-Make sure you have the proper permission to the registry if the above commands don’t work.
+Make sure you have the proper permission to the registry if the above commands don't work.
 
 **Install the CRDs into the cluster:**
 
@@ -48,6 +66,7 @@ kubectl apply -k config/samples/
 >**NOTE**: Ensure that the samples has default values to test it out.
 
 ### To Uninstall
+
 **Delete the instances (CRs) from the cluster:**
 
 ```sh
@@ -111,7 +130,27 @@ previously added to 'dist/chart/values.yaml' or 'dist/chart/manager/manager.yaml
 is manually re-applied afterwards.
 
 ## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development
+
+```sh
+# Run tests
+make test
+
+# Run linting
+make lint
+
+# Build locally
+make build
+```
 
 **NOTE:** Run `make help` for more information on all potential `make` targets
 
@@ -132,4 +171,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
